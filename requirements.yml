@@ -5,3 +5,4 @@ collections:
   - name: arista.eos
   - name: junipernetworks.junos
   - name: community.network
+  - name: netbox.netbox
