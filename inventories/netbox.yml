@@ -1,6 +1,6 @@
 plugin: netbox.netbox.nb_inventory
 # Altere para o seu endpoint NetBox (atenção ao /api/ no final)
-api_endpoint: https://192.168.90.30/api/
+api_endpoint: http://192.168.90.30
 # Token vem via variável de ambiente NETBOX_TOKEN (definida no Source do AWX)
 token: "{{ lookup('env', 'NETBOX_TOKEN') }}"
 validate_certs: false
