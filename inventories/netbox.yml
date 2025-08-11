@@ -1,0 +1,24 @@
+plugin: netbox.netbox.nb_inventory
+# Altere para o seu endpoint NetBox (atenção ao /api/ no final)
+api_endpoint: https://SEU_NETBOX/api/
+# Token vem via variável de ambiente NETBOX_TOKEN (definida no Source do AWX)
+token: "{{ lookup('env', 'NETBOX_TOKEN') }}"
+validate_certs: false
+
+# Traga só os dispositivos marcados com a tag
+query_filters:
+  - status: active
+  - tag: para-configurar
+
+# Agrupamentos úteis
+group_by:
+  - device_roles
+  - platforms
+  - sites
+
+# Variáveis host úteis
+compose:
+  ansible_host: >
+    {{ (primary_ip4.address | default(primary_ip.address)) | regex_replace('/.*','') }}
+  ansible_network_os: >
+    {{ custom_fields.cf_ansible_network_os | default(platform.slug) }}

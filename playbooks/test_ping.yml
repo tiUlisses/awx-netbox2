@@ -1,0 +1,25 @@
+- name: Teste de conectividade a equipamentos de rede
+  hosts: all
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: IOS ping
+      cisco.ios.ios_ping:
+        dest: "{{ ansible_host }}"
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: Comware display clock (teste)
+      community.network.comware_command:
+        commands: [ "display clock" ]
+      when: ansible_network_os == 'community.network.comware'
+
+    - name: EOS show clock (teste)
+      arista.eos.eos_command:
+        commands: [ "show clock" ]
+      when: ansible_network_os == 'arista.eos.eos'
+
+    - name: Junos show system uptime (teste)
+      junipernetworks.junos.junos_command:
+        commands: [ "show system uptime" ]
+      when: ansible_network_os == 'junipernetworks.junos.junos'

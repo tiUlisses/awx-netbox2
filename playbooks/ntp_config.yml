@@ -1,0 +1,33 @@
+- name: Configurar NTP em múltiplos OS
+  hosts: all
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+  vars:
+    ntp_servers:
+      - 200.160.7.186   # a.st1.ntp.br
+      - 200.189.40.8    # b.st1.ntp.br
+
+  tasks:
+    - name: NTP em Comware
+      community.network.comware_ntp:
+        peer: "{{ ntp_servers }}"
+        state: present
+      when: ansible_network_os == 'community.network.comware'
+
+    - name: NTP em Cisco IOS
+      cisco.ios.ios_ntp:
+        servers: "{{ ntp_servers | map('regex_replace','^(.*)$','{"server": "\1"}') | list }}"
+        state: merged
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: NTP em Arista EOS
+      arista.eos.eos_ntp_global:
+        config:
+          servers: "{{ ntp_servers }}"
+      when: ansible_network_os == 'arista.eos.eos'
+
+    - name: NTP em Junos
+      junipernetworks.junos.junos_ntp:
+        servers: "{{ ntp_servers }}"
+        state: present
+      when: ansible_network_os == 'junipernetworks.junos.junos'
